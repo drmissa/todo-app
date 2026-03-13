@@ -3,96 +3,110 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Todo List</title>
+  <title>Tasks</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
     :root {
       --primary: #6366f1;
       --primary-hover: #4f46e5;
-      --bg: #f8fafc;
+      --bg: #f1f5f9;
       --card-bg: #ffffff;
       --text: #1e293b;
       --text-secondary: #64748b;
       --border: #e2e8f0;
       --danger: #ef4444;
-      --danger-hover: #dc2626;
       --success: #22c55e;
+      --warning: #f59e0b;
       --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
       --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
     }
 
+    .dark {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --text: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --border: #334155;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      background: var(--bg);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 20px;
+      transition: background 0.3s;
     }
 
-    .app {
-      width: 100%;
-      max-width: 480px;
-    }
+    .app { width: 100%; max-width: 520px; }
 
     .header {
-      text-align: center;
-      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
     }
 
-    .header h1 {
-      font-size: 28px;
-      font-weight: 700;
-      color: var(--text);
-      margin-bottom: 4px;
+    .header h1 { font-size: 28px; font-weight: 700; color: var(--text); }
+    .header p { font-size: 14px; color: var(--text-secondary); margin-top: 2px; }
+
+    .theme-toggle {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      cursor: pointer;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      box-shadow: var(--shadow);
     }
 
-    .header p {
-      color: var(--text-secondary);
-      font-size: 14px;
-    }
+    .theme-toggle:hover { transform: scale(1.1); }
 
     .card {
       background: var(--card-bg);
-      border-radius: 16px;
+      border-radius: 20px;
       box-shadow: var(--shadow-lg);
       overflow: hidden;
     }
 
-    .input-wrapper {
-      display: flex;
+    .input-section {
       padding: 20px;
-      gap: 12px;
       border-bottom: 1px solid var(--border);
     }
 
-    .input-wrapper input {
+    .input-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .input-row input {
       flex: 1;
       padding: 14px 16px;
       border: 2px solid var(--border);
       border-radius: 12px;
       font-size: 15px;
       font-family: inherit;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      background: var(--card-bg);
+      color: var(--text);
       outline: none;
+      transition: border-color 0.2s;
     }
 
-    .input-wrapper input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
-    }
+    .input-row input:focus { border-color: var(--primary); }
 
-    .input-wrapper button {
-      padding: 14px 24px;
+    .input-row button {
+      padding: 14px 20px;
       background: var(--primary);
       color: white;
       border: none;
@@ -100,23 +114,93 @@
       font-size: 15px;
       font-weight: 600;
       cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
+      transition: background 0.2s;
     }
 
-    .input-wrapper button:hover {
-      background: var(--primary-hover);
+    .input-row button:hover { background: var(--primary-hover); }
+
+    .options-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
     }
 
-    .input-wrapper button:active {
-      transform: scale(0.98);
+    .options-row select {
+      flex: 1;
+      padding: 10px 12px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      background: var(--card-bg);
+      color: var(--text);
+      cursor: pointer;
+      outline: none;
     }
+
+    .options-row input[type="date"] {
+      flex: 1;
+      padding: 10px 12px;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      background: var(--card-bg);
+      color: var(--text);
+      cursor: pointer;
+      outline: none;
+    }
+
+    .filters {
+      display: flex;
+      padding: 12px 20px;
+      gap: 8px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .filter-btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: transparent;
+      color: var(--text-secondary);
+    }
+
+    .filter-btn.active {
+      background: var(--primary);
+      color: white;
+    }
+
+    .filter-btn:hover:not(.active) {
+      background: var(--border);
+    }
+
+    .clear-btn {
+      margin-left: auto;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      background: var(--danger);
+      color: white;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .clear-btn.visible { opacity: 1; }
 
     .stats {
       display: flex;
-      padding: 16px 20px;
-      background: #f8fafc;
+      padding: 14px 20px;
+      gap: 20px;
       border-bottom: 1px solid var(--border);
-      gap: 24px;
     }
 
     .stat {
@@ -131,37 +215,26 @@
     .stat-value {
       background: var(--primary);
       color: white;
-      padding: 2px 8px;
+      padding: 3px 10px;
       border-radius: 20px;
       font-size: 12px;
     }
 
-    .stat-value.completed {
-      background: var(--success);
-    }
+    .stat-value.completed { background: var(--success); }
+    .stat-value.remaining { background: var(--warning); }
 
-    ul {
-      list-style: none;
-      max-height: 400px;
-      overflow-y: auto;
-    }
+    ul { list-style: none; max-height: 420px; overflow-y: auto; }
 
     li {
       display: flex;
       align-items: center;
-      padding: 16px 20px;
-      gap: 14px;
+      padding: 14px 20px;
+      gap: 12px;
       border-bottom: 1px solid var(--border);
       transition: background 0.15s;
     }
 
-    li:last-child {
-      border-bottom: none;
-    }
-
-    li:hover {
-      background: #f8fafc;
-    }
+    li:hover { background: var(--bg); }
 
     li.completed .todo-text {
       text-decoration: line-through;
@@ -181,149 +254,195 @@
       flex-shrink: 0;
     }
 
-    .checkbox:hover {
-      border-color: var(--primary);
-    }
-
-    .checkbox.checked {
-      background: var(--success);
-      border-color: var(--success);
-    }
-
+    .checkbox:hover { border-color: var(--primary); }
+    .checkbox.checked { background: var(--success); border-color: var(--success); }
     .checkbox.checked::after {
       content: '✓';
       color: white;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: bold;
     }
 
+    .todo-content { flex: 1; min-width: 0; }
+
     .todo-text {
-      flex: 1;
       font-size: 15px;
       color: var(--text);
       word-break: break-word;
+      display: block;
     }
 
-    .delete-btn {
+    .todo-meta {
+      display: flex;
+      gap: 8px;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+
+    .priority {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    .priority.high { background: #fecaca; color: #dc2626; }
+    .priority.medium { background: #fef3c7; color: #d97706; }
+    .priority.low { background: #bbf7d0; color: #16a34a; }
+
+    .due-date {
+      font-size: 11px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .due-date.overdue { color: var(--danger); }
+
+    .actions {
+      display: flex;
+      gap: 4px;
+    }
+
+    .action-btn {
       background: transparent;
       border: none;
       color: var(--text-secondary);
       cursor: pointer;
-      padding: 6px;
+      padding: 6px 8px;
       border-radius: 6px;
       transition: all 0.2s;
-      font-size: 18px;
+      font-size: 16px;
     }
 
-    .delete-btn:hover {
-      background: #fee2e2;
-      color: var(--danger);
-    }
+    .action-btn:hover { background: var(--border); }
+    .action-btn.delete:hover { background: #fee2e2; color: var(--danger); }
 
     .empty {
-      padding: 40px 20px;
+      padding: 50px 20px;
       text-align: center;
       color: var(--text-secondary);
     }
 
-    .empty-icon {
-      font-size: 48px;
-      margin-bottom: 12px;
-      opacity: 0.5;
-    }
+    .empty-icon { font-size: 56px; margin-bottom: 16px; opacity: 0.6; }
+    .empty p { font-size: 15px; }
 
     @keyframes slideIn {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    li {
-      animation: slideIn 0.2s ease-out;
-    }
+    li { animation: slideIn 0.25s ease-out; }
 
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 3px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--text-secondary);
-    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
   </style>
 </head>
 <body>
   <div class="app">
     <div class="header">
-      <h1>Tasks</h1>
-      <p>Stay organized, get things done</p>
+      <div>
+        <h1>Tasks</h1>
+        <p>Organize your day, achieve your goals</p>
+      </div>
+      <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">🌙</button>
     </div>
-    
+
     <div class="card">
-      <div class="input-wrapper">
-        <input type="text" id="todoInput" placeholder="What needs to be done?">
-        <button onclick="addTodo()">Add Task</button>
+      <div class="input-section">
+        <div class="input-row">
+          <input type="text" id="todoInput" placeholder="What needs to be done?">
+          <button onclick="addTodo()">Add</button>
+        </div>
+        <div class="options-row">
+          <select id="priority">
+            <option value="low">Low Priority</option>
+            <option value="medium" selected>Medium</option>
+            <option value="high">High Priority</option>
+          </select>
+          <input type="date" id="dueDate">
+        </div>
       </div>
-      
+
+      <div class="filters">
+        <button class="filter-btn active" onclick="setFilter('all')">All</button>
+        <button class="filter-btn" onclick="setFilter('active')">Active</button>
+        <button class="filter-btn" onclick="setFilter('completed')">Completed</button>
+        <button class="clear-btn" onclick="clearCompleted()">Clear Done</button>
+      </div>
+
       <div class="stats">
-        <div class="stat">
-          <span>Total</span>
-          <span class="stat-value" id="totalCount">0</span>
-        </div>
-        <div class="stat">
-          <span>Done</span>
-          <span class="stat-value completed" id="completedCount">0</span>
-        </div>
+        <div class="stat"><span>Total</span><span class="stat-value" id="totalCount">0</span></div>
+        <div class="stat"><span>Active</span><span class="stat-value remaining" id="activeCount">0</span></div>
+        <div class="stat"><span>Done</span><span class="stat-value completed" id="completedCount">0</span></div>
       </div>
-      
+
       <ul id="todoList"></ul>
     </div>
   </div>
 
   <script>
     let todos = JSON.parse(localStorage.getItem('todos')) || [];
+    let filter = 'all';
+    let isDark = localStorage.getItem('theme') === 'dark';
+
+    if (isDark) document.body.classList.add('dark');
 
     function save() {
       localStorage.setItem('todos', JSON.stringify(todos));
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
       render();
     }
 
     function render() {
       const list = document.getElementById('todoList');
-      
-      document.getElementById('totalCount').textContent = todos.length;
-      document.getElementById('completedCount').textContent = todos.filter(t => t.completed).length;
+      const filtered = filter === 'all' ? todos : 
+                       filter === 'active' ? todos.filter(t => !t.completed) : 
+                       todos.filter(t => t.completed);
 
-      if (todos.length === 0) {
+      const active = todos.filter(t => !t.completed).length;
+      document.getElementById('totalCount').textContent = todos.length;
+      document.getElementById('activeCount').textContent = active;
+      document.getElementById('completedCount').textContent = todos.length - active;
+
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.toLowerCase() === filter);
+      });
+
+      document.querySelector('.clear-btn').classList.toggle('visible', todos.some(t => t.completed));
+
+      if (filtered.length === 0) {
         list.innerHTML = `
           <div class="empty">
-            <div class="empty-icon">📝</div>
-            <p>No tasks yet. Add one above!</p>
-          </div>
-        `;
+            <div class="empty-icon">${filter === 'completed' ? '🎯' : '📝'}</div>
+            <p>${filter === 'all' ? 'No tasks yet. Add one above!' : 
+                filter === 'active' ? 'All caught up! 🎉' : 'No completed tasks yet'}</p>
+          </div>`;
         return;
       }
 
-      list.innerHTML = todos.map((todo, i) => `
-        <li class="${todo.completed ? 'completed' : ''}">
-          <div class="checkbox ${todo.completed ? 'checked' : ''}" onclick="toggle(${i})"></div>
-          <span class="todo-text">${escapeHtml(todo.text)}</span>
-          <button class="delete-btn" onclick="deleteTodo(${i})" title="Delete">×</button>
-        </li>
-      `).join('');
+      list.innerHTML = filtered.map((todo, i) => {
+        const realIndex = todos.indexOf(todo);
+        const overdue = todo.due && !todo.completed && new Date(todo.due) < new Date().toDateString();
+        return `
+          <li class="${todo.completed ? 'completed' : ''}">
+            <div class="checkbox ${todo.completed ? 'checked' : ''}" onclick="toggle(${realIndex})"></div>
+            <div class="todo-content">
+              <span class="todo-text">${escapeHtml(todo.text)}</span>
+              <div class="todo-meta">
+                <span class="priority ${todo.priority}">${todo.priority}</span>
+                ${todo.due ? `<span class="due-date ${overdue ? 'overdue' : ''}">📅 ${formatDate(todo.due)}</span>` : ''}
+              </div>
+            </div>
+            <div class="actions">
+              <button class="action-btn" onclick="editTodo(${realIndex})" title="Edit">✏️</button>
+              <button class="action-btn delete" onclick="deleteTodo(${realIndex})" title="Delete">🗑️</button>
+            </div>
+          </li>`;
+      }).join('');
     }
 
     function escapeHtml(text) {
@@ -332,11 +451,24 @@
       return div.innerHTML;
     }
 
+    function formatDate(dateStr) {
+      const date = new Date(dateStr);
+      const today = new Date().toDateString();
+      const tomorrow = new Date(Date.now() + 86400000).toDateString();
+      if (date.toDateString() === today) return 'Today';
+      if (date.toDateString() === tomorrow) return 'Tomorrow';
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
     function addTodo() {
       const input = document.getElementById('todoInput');
+      const priority = document.getElementById('priority').value;
+      const due = document.getElementById('dueDate').value;
+
       if (input.value.trim()) {
-        todos.unshift({ text: input.value.trim(), completed: false });
+        todos.unshift({ text: input.value.trim(), completed: false, priority, due });
         input.value = '';
+        document.getElementById('dueDate').value = '';
         save();
       }
     }
@@ -348,6 +480,30 @@
 
     function deleteTodo(i) {
       todos.splice(i, 1);
+      save();
+    }
+
+    function editTodo(i) {
+      const newText = prompt('Edit task:', todos[i].text);
+      if (newText !== null && newText.trim()) {
+        todos[i].text = newText.trim();
+        save();
+      }
+    }
+
+    function clearCompleted() {
+      todos = todos.filter(t => !t.completed);
+      save();
+    }
+
+    function setFilter(f) {
+      filter = f;
+      render();
+    }
+
+    function toggleTheme() {
+      isDark = !isDark;
+      document.body.classList.toggle('dark');
       save();
     }
 
